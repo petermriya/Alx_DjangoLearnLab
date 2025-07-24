@@ -1,16 +1,16 @@
 from django.db import models
 
 class Author(models.Model):
-    name = models.CharField(length = 100)
+    name = models.CharField(max_length=100)
 
 class Book(models.Model):
-    title = models.CharField(length = 100)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE,related_name="name")
+    title = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name="books")
 
 class Library(models.Model):
-    name = models.CharField(length = 100)
-    book = models.ManyToManyField(Book, related_name="author")
+    name = models.CharField(max_length=100)
+    book = models.ManyToManyField(Book, related_name="libraries")
 
 class Librarian(models.Model):
-    name = models.CharField(length = 100)
-    library = models.OneToOneField(Library)
+    name = models.CharField(max_length=100)
+    library = models.OneToOneField(Library, on_delete=models.CASCADE)
