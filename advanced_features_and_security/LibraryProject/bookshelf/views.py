@@ -43,3 +43,11 @@ def delete_user(request, user_id):
         user.delete()
         return redirect('user_list')
     return render(request, 'bookshelf/delete_user.html', {'user': user})
+
+##Update
+from django.shortcuts import render
+from .models import Book  
+
+def book_list(request):
+    books = Book.objects.all()
+    return render(request, 'bookshelf/book_list.html', {'books': books})
