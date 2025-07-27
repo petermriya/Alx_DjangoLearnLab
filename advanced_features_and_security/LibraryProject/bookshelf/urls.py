@@ -6,4 +6,10 @@ urlpatterns = [
     path('users/create/', views.create_user, name='create_user'),
     path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),
     path('users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
+    path('example-form/', views.example_form_view, name='example_form'),
 ]
+
+
+
+
+
