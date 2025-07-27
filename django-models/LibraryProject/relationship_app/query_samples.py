@@ -9,4 +9,5 @@ def get_books_in_library(library_name):
     return library.books.all()
 
 def get_librarian_for_library(library_name):
-    return Librarian.objects.get(library__name=library_name)
+    library = Library.objects.get(name=library_name)
+    return Librarian.objects.get(library=library)
