@@ -2,7 +2,7 @@
 
 from django.urls import path
 from .views import list_books, LibraryDetailView
-from . import views
+from .views import list_books, LibraryDetailView, register
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
