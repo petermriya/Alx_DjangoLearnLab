@@ -39,9 +39,10 @@ def user_logout(request):
     return render(request, "relationship_app/logout.html")
 
 
+
+from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import redirect
 
 def register(request):
     if request.method == "POST":
