@@ -1,7 +1,7 @@
 # relationship_app/urls.py
 
 from django.urls import path
-from .views import list_books, LibraryDetailView, register  # Ensure register is imported
+from .views import list_books, LibraryDetailView, register
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
