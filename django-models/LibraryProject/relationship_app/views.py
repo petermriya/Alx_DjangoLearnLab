@@ -107,6 +107,26 @@ def delete_book(request, book_id):
 
 
 
+##Trying
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import permission_required
+from django.http import HttpResponse
+from .models import Book
+
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    return HttpResponse("Add book view - requires can_add_book permission")
+
+@permission_required('relationship_app.can_change_book')
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    return HttpResponse(f"Edit book view for {book.title} - requires can_change_book permission")
+
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    return HttpResponse(f"Delete book view for {book.title} - requires can_delete_book permission")
 
 
 
