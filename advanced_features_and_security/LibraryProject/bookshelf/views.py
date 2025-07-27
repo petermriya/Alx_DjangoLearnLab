@@ -51,3 +51,44 @@ from .models import Book
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+
+
+##Week 11
+
+from django.shortcuts import render
+from .forms import ExampleForm
+from .models import CustomUser
+from .forms import ExampleForm
+
+def search_user(request):
+    form = ExampleForm()
+    results = None
+
+    if request.method == "GET" and 'example_field' in request.GET:
+        form = ExampleForm(request.GET)
+        if form.is_valid():
+            search_term = form.cleaned_data['example_field']
+            results = CustomUser.objects.filter(username__icontains=search_term)
+
+    return render(request, 'bookshelf/search_user.html', {'form': form, 'results': results})
+
+
+##security
+
+from .forms import ExampleForm
+from .models import CustomUser
+
+def example_form_view(request):
+    form = ExampleForm()
+    results = None
+
+    if request.method == "GET" and 'example_field' in request.GET:
+        form = ExampleForm(request.GET)
+        if form.is_valid():
+            search_term = form.cleaned_data['example_field']
+            results = CustomUser.objects.filter(username__icontains=search_term)
+
+    return render(request, 'bookshelf/form_example.html', {'form': form, 'results': results})
+
+
