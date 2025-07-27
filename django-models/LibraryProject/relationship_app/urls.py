@@ -4,9 +4,14 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
-from .admin_view import admin_view
-from .librarian_view import librarian_view
-from .member_view import member_view
+from .views import (
+    list_books, 
+    LibraryDetailView, 
+    register,
+    admin_view,
+    librarian_view,
+    member_view
+)
 
 
 urlpatterns = [
