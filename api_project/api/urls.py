@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token  # <-- moved up
 from .views import BookList, BookViewSet
 
 router = DefaultRouter()
@@ -11,5 +12,9 @@ urlpatterns = [
 
     # Include the router URLs for BookViewSet (all CRUD operations)
     path('', include(router.urls)),
+
+    # Token auth endpoint
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
 ]
+
 
