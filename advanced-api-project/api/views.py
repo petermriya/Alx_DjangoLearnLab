@@ -1,31 +1,34 @@
-from rest_framework import generics, permissions
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Book
-from .serializers import BookSerializer
 from datetime import date
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from .models import Book, BlogPost
+from .serializers import BookSerializer, BlogPostSerializer
 
-# List all books
+# -------------------- BOOK VIEWS --------------------
+
+# List all books (read-only for everyone, write requires auth)
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-# Retrieve a single book by ID
+# Retrieve a single book by ID (read-only for everyone)
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-# Create a new book (with extra validation and permission check)
+# Create a new book (only logged-in users can create)
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can create
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        # Example extra validation: block books older than year 1500
         publication_year = request.data.get('publication_year')
         if publication_year and int(publication_year) < 1500:
             return Response(
@@ -35,11 +38,11 @@ class BookCreateView(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-# Update an existing book (with extra validation and permission check)
+# Update an existing book (only logged-in users can update)
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can update
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
         publication_year = request.data.get('publication_year')
@@ -53,29 +56,23 @@ class BookUpdateView(generics.UpdateAPIView):
         return super().update(request, *args, **kwargs)
 
 
-# Delete a book
+# Delete a book (only logged-in users can delete)
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can delete
+    permission_classes = [IsAuthenticated]
 
 
-
-    ##DRF views
-    from rest_framework import generics, permissions
-from .models import BlogPost
-from .serializers import BlogPostSerializer
+# -------------------- BLOGPOST VIEWS --------------------
 
 # List & Create
 class BlogPostListCreateView(generics.ListCreateAPIView):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 # Retrieve, Update & Delete
 class BlogPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = BlogPost.objects.all()
     serializer_class = BlogPostSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-
+    permission_classes = [IsAuthenticatedOrReadOnly]
