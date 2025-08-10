@@ -9,6 +9,7 @@ class BookAPITestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='testpass123')  # Added login
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
         self.book_data = {
@@ -19,7 +20,7 @@ class BookAPITestCase(APITestCase):
         self.book = Book.objects.create(**self.book_data)
 
     def test_list_books_unauthenticated(self):
-        self.client.credentials()  # Remove authentication
+        self.client.logout()  # Remove authentication
         response = self.client.get(reverse('book-list'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(len(response.data), 1)
@@ -66,7 +67,7 @@ class BookAPITestCase(APITestCase):
         self.assertEqual(response.data[0]['publication_year'], 2021)
 
     def test_retrieve_book_unauthenticated(self):
-        self.client.credentials()  # Remove authentication
+        self.client.logout()  # Remove authentication
         response = self.client.get(reverse('book-detail', kwargs={'pk': self.book.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'Test Book')
@@ -84,7 +85,7 @@ class BookAPITestCase(APITestCase):
         self.assertTrue(Book.objects.filter(title='New Book').exists())
 
     def test_create_book_unauthenticated(self):
-        self.client.credentials()  # Remove authentication
+        self.client.logout()  # Remove authentication
         response = self.client.post(reverse('book-create'), self.book_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -109,7 +110,7 @@ class BookAPITestCase(APITestCase):
         self.assertIn('id', response.data)
 
     def test_update_book_unauthenticated(self):
-        self.client.credentials()  # Remove authentication
+        self.client.logout()  # Remove authentication
         update_data = {'id': self.book.pk, 'title': 'Updated Book', 'author': 'Test Author', 'publication_year': 2020}
         response = self.client.put(reverse('book-update'), update_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -126,7 +127,7 @@ class BookAPITestCase(APITestCase):
         self.assertIn('id', response.data)
 
     def test_delete_book_unauthenticated(self):
-        self.client.credentials()  # Remove authentication
+        self.client.logout()  # Remove authentication
         delete_data = {'id': self.book.pk}
         response = self.client.delete(reverse('book-delete'), delete_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
