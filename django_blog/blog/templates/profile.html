@@ -1,0 +1,8 @@
+<!-- templates/your_app_name/profile.html -->
+{% extends "your_app_name/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.username }}</h2>
+<p>Email: {{ user.email }}</p>
+<p>Member since: {{ user.date_joined }}</p>
+{% endblock %}
