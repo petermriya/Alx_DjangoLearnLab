@@ -1,0 +1,14 @@
+<!-- templates/your_app_name/register.html -->
+{% extends "your_app_name/base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<h2>Create an Account</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+{% if form.errors %}
+    <p class="error">Please correct the errors below.</p>
+{% endif %}
+{% endblock %}
