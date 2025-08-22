@@ -1,7 +1,6 @@
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Comment, Tag
+from .models import Post
 from .forms import PostForm, CommentForm
 
 
@@ -26,16 +25,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        response = super().form_valid(form)
-        self.handle_tags(form.cleaned_data.get("tags", ""))
-        return response
-
-    def handle_tags(self, tags_string):
-        if tags_string:
-            tag_names = [tag.strip() for tag in tags_string.split(",") if tag.strip()]
-            for name in tag_names:
-                tag_obj, created = Tag.objects.get_or_create(name=name)
-                self.object.tags.add(tag_obj)
+        return super().form_valid(form)
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -44,17 +34,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = "blog/post_form.html"
 
     def form_valid(self, form):
-        response = super().form_valid(form)
-        self.object.tags.clear()  # clear old tags
-        self.handle_tags(form.cleaned_data.get("tags", ""))
-        return response
-
-    def handle_tags(self, tags_string):
-        if tags_string:
-            tag_names = [tag.strip() for tag in tags_string.split(",") if tag.strip()]
-            for name in tag_names:
-                tag_obj, created = Tag.objects.get_or_create(name=name)
-                self.object.tags.add(tag_obj)
+        return super().form_valid(form)
 
     def test_func(self):
         post = self.get_object()
