@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 
 
 # --- User Registration Form ---
@@ -15,13 +15,19 @@ class UserRegisterForm(UserCreationForm):
 
 # --- Post Form (for creating and updating blog posts) ---
 class PostForm(forms.ModelForm):
+    # New field for tags (comma-separated input)
+    tags = forms.CharField(
+        required=False,
+        help_text="Enter tags separated by commas (e.g., Django, Python, Blog)."
+    )
+
     class Meta:
         model = Post
-        fields = ["title", "content"]  # author is set automatically in the view
+        fields = ["title", "content", "tags"]  # include tags
 
 
-# --- Comment Form (for creating and editing comments) ---
+# --- Comment Form ---
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ["content"]  # author and post are set in the view
+        fields = ["content"]
