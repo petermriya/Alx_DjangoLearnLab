@@ -13,10 +13,11 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("profile/", views.profile, name="profile"),
 
-    # CRUD Post routes
-    path("posts/", PostListView.as_view(), name="post-list"),                # /posts/
-    path("posts/new/", PostCreateView.as_view(), name="post-create"),        # /posts/new/
-    path("posts/<int:pk>/", PostDetailView.as_view(), name="post-detail"),   # /posts/1/
-    path("posts/<int:pk>/edit/", PostUpdateView.as_view(), name="post-update"),   # /posts/1/edit/
-    path("posts/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"), # /posts/1/delete/
+    # CRUD Post routes (match exactly what Django expects)
+    path("", PostListView.as_view(), name="post-list"),                       # list all
+    path("post/new/", PostCreateView.as_view(), name="post-create"),          # create
+    path("post/<int:pk>/", PostDetailView.as_view(), name="post-detail"),     # detail
+    path("post/<int:pk>/update/", PostUpdateView.as_view(), name="post-update"), # update
+    path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"), # delete
 ]
+
