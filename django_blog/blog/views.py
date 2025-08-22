@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required   # ✅ required import
 from .forms import UserRegisterForm, PostForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
@@ -20,6 +21,7 @@ def register(request):
     return render(request, "blog/register.html", {"form": form})
 
 
+@login_required   # ✅ enforce login for profile page
 def profile(request):
     return render(request, "blog/profile.html")
 
