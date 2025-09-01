@@ -1,8 +1,6 @@
-from django.shortcuts import render
-
-# Create your views here.
-# posts/views.py
-from rest_framework import viewsets, permissions
+# posts/views.py (updated with feed functionality)
+from rest_framework import viewsets, permissions, generics
+from rest_framework.response import Response
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 
@@ -12,10 +10,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     but only the owner can edit or delete.
     """
     def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request
         if request.method in permissions.SAFE_METHODS:
             return True
-        # Write permissions only for the owner
         return obj.author == request.user
 
 
@@ -35,3 +31,13 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_users = user.following.all()
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')
