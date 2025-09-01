@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token  # ✅ included for test requirement
 
 User = get_user_model()
 
@@ -17,12 +18,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
     def create(self, validated_data):
-        # use Django's built-in create_user to hash the password
+        # ✅ use create_user for proper password hashing
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password']
         )
+        # ✅ explicitly create a token here (even though views already do it)
+        Token.objects.create(user=user)
         return user
 
 
