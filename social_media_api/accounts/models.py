@@ -1,21 +1,24 @@
-# accounts/models.py (updated)
+# accounts/models.py
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+
 
 class CustomUser(AbstractUser):
-    bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    # Users who follow this user
     followers = models.ManyToManyField(
-        "self",
+        settings.AUTH_USER_MODEL,
+        related_name="user_followers",
         symmetrical=False,
-        related_name="following",
-        blank=True
+        blank=True,
     )
+
+    # Users this user is following
     following = models.ManyToManyField(
-        "self",
+        settings.AUTH_USER_MODEL,
+        related_name="user_following",
         symmetrical=False,
-        related_name="followers_set",
-        blank=True
+        blank=True,
     )
 
     def __str__(self):
